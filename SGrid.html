@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="js/jquery-3.1.1.js"></script>
+    <script type="text/javascript" src="js/SGrid.js"></script>
+    <link rel="stylesheet" href="css/font-awesome.css">
+    <link rel="stylesheet" href="css/SGrid.css">
+    <script>
+
+        $(document).ready(function () {
+
+            var grid = $('#grid1').SGrid({
+                width: 'auto',
+                height: 500,
+                resize: true,
+                lazy:true,
+                key: 'seq',
+                title: '샘플그리드',
+                header: ['seq', '시압지번호', '사업소명', '사용코드', '사용여부'],
+                cols: ['seq', 'name', 'age', 'job', 'flag'],
+                colsWidth: [100, 200, 500, 500, 100],
+                colsAlign: ['left', 'center', 'center', 'center', 'center'],
+                colsType: ['hide', 'text', 'text', {
+                    'select': {
+                        '0100': '0100',
+                        '0200': '0200',
+                        '0300': '0300',
+                        '0400': '0400'
+                    }
+                }, 'checkbox'],
+                data: 'data.json',
+                dataRepo: 'http',
+                btn: {upd: true, ins: true, del: true, find: true, refresh: true, excel: true},
+                functional: {
+                    del: function (dd) {
+                        console.log(JSON.stringify(dd));
+                    },
+                    upd: function (dd) {
+                        console.log(JSON.stringify(dd));
+                    },
+                    ins: function (dd) {
+                        console.log(JSON.stringify(dd));
+                    }
+                }
+            })
+
+//            console.log(grid.getColumnValue(1, 'job'));
+//            console.log(grid.getRowData(3));
+//            grid.setColumnValue(4, 'flag', true);
+
+
+
+
+            var data1 = [
+                ["성우", "01", "무직"],
+                ["처리", "03", "용접"],
+                ["성근", "02", "사무직"],
+                ["상우", "04", "세무사사"]
+            ];
+
+            var grid3 = $('#grid2').SGrid({
+                width: 1400,
+                height: 500,
+                title:'Grid',
+                header: ['이름', '나이', '직업'],
+                cols: ['name', 'age', 'job'],
+                colsWidth: [400, 400, 400],
+                colsAlign: ['center', 'center', 'left'],
+                colsType: ['text', {'select': {'01': '01', '02': '02', '03': '03'}}, 'text'],
+                dataRepo:'local',
+                data: data1,
+                btn: {upd: true, ins: true, del: true, find: true, refresh: true},
+                functional: {
+                    del: function (dd) {
+                        console.log(JSON.stringify(dd));
+                    }
+                }
+
+            })
+
+            grid3.on('bs.SGrid.data', function (e, d1) {
+                console.log(JSON.stringify(d1));
+            })
+        })
+
+
+
+
+    </script>
+</head>
+<body>
+<br>
+
+<div id="grid1"></div>
+<br>
+<br>
+<div id="grid2"></div>
+</body>
+</html>
