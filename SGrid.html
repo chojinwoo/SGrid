@@ -70,7 +70,7 @@
                 colsWidth: [400, 400, 400, 200],
                 colsAlign: ['center', 'center', 'left', 'left'],
                 colsType: ['text', {'select': {'01': '첫번째', '02': '두번째', '03': '세번째'}}, 'text', 'text'],
-                colsFileInsBtn:{ /*dataType FormData*/
+                colsFileInsBtn:{ /* functional.ins returnType FormData*/
                     text:'파일업로드',
                     type:'file',
                     mappingCol:'file'
@@ -81,6 +81,9 @@
                 functional: {
                     del: function (dd) {
                         console.log(JSON.stringify(dd));
+                    },
+                    ins: function (dd, form) {
+                        console.log(JSON.stringify(dd))
                     }
                 }
 
