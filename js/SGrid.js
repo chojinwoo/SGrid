@@ -1,6 +1,3 @@
-/**
- * Created by bangae1 on 2016-11-12.
- */
 var SGrid = function () {
     var DATA_KEY = 'bs.SGrid'
     var EVENT_KEY = DATA_KEY + ".";
@@ -13,7 +10,9 @@ var SGrid = function () {
         height: 500,
         check: true,
         count: true,
-        title: ''
+        title: '',
+        dataRepo:'local',
+        btn: {upd: false, ins: false, del: false, find: true, refresh: true, excel: false}
     }
 
     var SGrid = function () {
@@ -96,7 +95,7 @@ var SGrid = function () {
                         if (option.count)body.push('<td class="SGrid-state">' + (Number(i) + 1) + '</td>')
                         if (option.check)body.push('<td class="SGrid-check"><input type="checkbox"/></td>')
                         var tot_width = 0;
-                        for (var ii in option.NOWDATA [i]) {
+                        for (var ii = 0; ii < option.cols.length; ii++) {
                             var surplus = 0;
                             if (option.colsType[ii] != 'hide')tot_width += option.colsWidth[ii];
                             if (option.colsWidth.length == Number(ii) + 1) {
@@ -105,12 +104,14 @@ var SGrid = function () {
                                 if (option.count)surplus -= 40;
                             }
                             option.surplus = surplus;
-                            if (option.colsType[ii] == 'hide')body.push('<td style="text-align:' + option.colsAlign[ii] + ';width:' + option.colsWidth[ii] + 'px; display:none" col="' + option.cols[ii] + '">' + option.NOWDATA[i][ii] + '</td>')
-                            if (option.colsType[ii] == 'text')body.push('<td style="text-align:' + option.colsAlign[ii] + ';width:' + option.colsWidth[ii] + 'px;" col="' + option.cols[ii] + '">' + option.NOWDATA[i][ii] + '</td>')
-                            if (typeof option.colsType[ii] == 'object')body.push('<td style="text-align:' + option.colsAlign[ii] + ';width:' + option.colsWidth[ii] + 'px;" col="' + option.cols[ii] + '">' + option.NOWDATA[i][ii] + '</td>')
+                            if (option.colsType[ii] == 'hide')body.push('<td style="text-align:' + option.colsAlign[ii] + ';width:' + option.colsWidth[ii] + 'px; display:none" col="' + option.cols[ii] + '">' + option.NOWDATA[i][option.cols[ii]] + '</td>')
+                            if (option.colsType[ii] == 'text')body.push('<td style="text-align:' + option.colsAlign[ii] + ';width:' + option.colsWidth[ii] + 'px;" col="' + option.cols[ii] + '">' + option.NOWDATA[i][option.cols[ii]] + '</td>')
+                            if (typeof option.colsType[ii] == 'object') {
+                                body.push('<td style="text-align:' + option.colsAlign[ii] + ';width:' + option.colsWidth[ii] + 'px;" col="' + option.cols[ii] + '" data-select-cd="'+option.NOWDATA[i][option.cols[ii]]+'">' + option.colsType[ii].select[option.NOWDATA[i][option.cols[ii]]] + '</td>');
+                            }
                             if (option.colsType[ii] == 'checkbox') {
                                 var checked = '';
-                                if (option.NOWDATA[i][ii])checked = 'checked';
+                                if (option.NOWDATA[i][option.cols[ii]])checked = 'checked';
                                 body.push('<td style="text-align:' + option.colsAlign[ii] + ';width:' + option.colsWidth[ii] + 'px;"><input name="' + option.cols[ii] + '" col="' + option.cols[ii] + '" type="checkbox" ' + checked + ' disabled></td>')
                             }
                         }
@@ -145,7 +146,6 @@ var SGrid = function () {
         }
 
         SGrid.prototype.reFresh = function (option, cnt) {
-            console.log(option.data.length)
             $('#SGrid-table' + cnt).find('tbody').remove();
             $('#SGrid-table' + cnt).find('thead').after(this.init_body(option));
             $('#SGrid-table' + cnt).find('tbody tr:first-child td').css('padding-top', $('#SGrid-table' + cnt).find('thead').height() + 'px');
@@ -157,11 +157,13 @@ var SGrid = function () {
                 if ($(_this).find('#SGrid-table' + cnt).css('display') != 'none') {
                     $(this).removeClass('fa-chevron-circle-down').addClass('fa-chevron-circle-up');
                     $(_this).find('#SGrid-table' + cnt).fadeOut('slow');
+                    $(_this).find('.SGrid').fadeOut('slow');
                     $(this).parent().addClass('SGrid-title-active');
                 } else {
                     $(this).parent().removeClass('SGrid-title-active');
                     $(this).removeClass('fa-chevron-circle-up').addClass('fa-chevron-circle-down');
                     $(_this).find('#SGrid-table' + cnt).fadeIn('slow');
+                    $(_this).find('.SGrid').fadeIn('slow');
                 }
 
             })
@@ -209,21 +211,24 @@ var SGrid = function () {
                 if (option.count)body.push('<td class="SGrid-state">' + (Number(i) + 1) + '</td>')
                 if (option.check)body.push('<td class="SGrid-check"><input type="checkbox"/></td>')
                 var tot_width = 0;
-                for (var ii in option.NOWDATA [i]) {
+                for (var ii = 0; ii < option.cols.length; ii++) {
                     var surplus = 0;
                     if (option.colsType[ii] != 'hide')tot_width += option.colsWidth[ii];
-                    if (option.colsWidth.length == Number(ii) + 1) {
+                    if (option.colsWidth.length <= (Number(ii) + 1)) {
                         surplus = option.width - tot_width;
                         if (option.check)surplus -= 40;
                         if (option.count)surplus -= 40;
+
+                        option.surplus = surplus;
                     }
-                    option.surplus = surplus;
-                    if (option.colsType[ii] == 'hide')body.push('<td style="text-align:' + option.colsAlign[ii] + ';width:' + option.colsWidth[ii] + 'px; display:none" col="' + option.cols[ii] + '">' + option.NOWDATA[i][ii] + '</td>')
-                    if (option.colsType[ii] == 'text')body.push('<td style="text-align:' + option.colsAlign[ii] + ';width:' + option.colsWidth[ii] + 'px;" col="' + option.cols[ii] + '">' + option.NOWDATA[i][ii] + '</td>')
-                    if (typeof option.colsType[ii] == 'object')body.push('<td style="text-align:' + option.colsAlign[ii] + ';width:' + option.colsWidth[ii] + 'px;" col="' + option.cols[ii] + '">' + option.NOWDATA[i][ii] + '</td>')
+                    if (option.colsType[ii] == 'hide')body.push('<td style="text-align:' + option.colsAlign[ii] + ';width:' + option.colsWidth[ii] + 'px; display:none" col="' + option.cols[ii] + '">' + option.NOWDATA[i][option.cols[ii]] + '</td>')
+                    if (option.colsType[ii] == 'text')body.push('<td style="text-align:' + option.colsAlign[ii] + ';width:' + option.colsWidth[ii] + 'px;" col="' + option.cols[ii] + '">' + option.NOWDATA[i][option.cols[ii]] + '</td>')
+                    if (typeof option.colsType[ii] == 'object') {
+                        body.push('<td style="text-align:' + option.colsAlign[ii] + ';width:' + option.colsWidth[ii] + 'px;" col="' + option.cols[ii] + '" data-select-cd="'+option.NOWDATA[i][option.cols[ii]]+'">' + option.colsType[ii].select[option.NOWDATA[i][option.cols[ii]]] + '</td>');
+                    }
                     if (option.colsType[ii] == 'checkbox') {
                         var checked = '';
-                        if (option.NOWDATA[i][ii])checked = 'checked';
+                        if (option.NOWDATA[i][option.cols[ii]])checked = 'checked';
                         body.push('<td style="text-align:' + option.colsAlign[ii] + ';width:' + option.colsWidth[ii] + 'px;"><input name="' + option.cols[ii] + '" col="' + option.cols[ii] + '" type="checkbox" ' + checked + ' disabled></td>')
                     }
                 }
@@ -273,15 +278,37 @@ var SGrid = function () {
                     ins_html.push('<tr>')
                     if (option.count)ins_html.push('<td class="SGrid-state" style="color:red;">I</td>')
                     if (option.check)ins_html.push('<td class="SGrid-check"><input type="checkbox" checked/></td>')
-                    for (var i in option.cols) {
-                        var surplus = 0;
+                    function setColumn() {
                         if (option.colsType[i] == 'text')ins_html.push('<td style="width:' + option.colsWidth[i] + 'px"><input class="form-control" type="text" col="' + option.cols[i] + '" name="' + option.cols[i] + '"/></td>')
                         if (option.colsType[i] == 'checkbox')ins_html.push('<td style="width:' + option.colsWidth[i] + 'px; text-align:' + option.colsAlign[i] + '"><input type="checkbox"  col="' + option.cols[i] + '" name="' + option.cols[i] + '"/></td>')
                         if (typeof option.colsType[i] == 'object')ins_html.push('<td style="width:' + option.colsWidth[i] + 'px">' + SGrid._dataObject(option.colsType[i], '', option.cols[i], option.colsWidth[i]) + '</td>');
                     }
+                    for (var i in option.cols) {
+                        var surplus = 0;
+                        if(typeof option.colsFileInsBtn == 'object') {
+                            if(option.cols[i] != option.colsFileInsBtn.mappingCol) {
+                                setColumn();
+                            } else {
+                                ins_html.push('<td class="file-td" style="width:' + option.colsWidth[i] + 'px;"><input type="file" class="file-input"/><button class="file-btn file-btn-success file-btn-sm">'+option.colsFileInsBtn.text+'</button></td>')
+                            }
+                        } else {
+                            setColumn();
+                        }
+
+                    }
+                    // if(option.colsFileInsBtn.mappingCol == null || option.colsFileInsBtn.mappingCol == "")if(typeof option.colsFileInsBtn == "object")ins_html.push('<td class="file-td" style="width:' + option.colsWidth[i] + 'px;"><input type="file" class="file-input"/><button class="file-btn">'+option.colsFileInsBtn.text+'</button></td>')
                     ins_html.push('<td style="width:' + option.surplus + 'px"></td>')
                     ins_html.push('</tr>')
-                    $('#SGrid-table' + cnt).find('.SGrid-body tr').eq(idx).before(ins_html.join(''))
+                    var lastIdx = $('#SGrid-table' + cnt).find('.SGrid-body tr:last-child').index();
+                    var row = 0;
+                    if(lastIdx > 0) {
+                        $('#SGrid-table' + cnt).find('.SGrid-body tr:last-child').after(ins_html.join(''))
+                    } else {
+                        $('#SGrid-table' + cnt).find('.SGrid-body').append(ins_html.join(''))
+                    }
+                    row = $('#SGrid-table' + cnt).find('.SGrid-body tr:last-child').index();
+                    row = row + 1;
+                    $(element).trigger(EVENT_KEY + 'ins_after', [row])
                 })
             }
             if (option.btn.del) {
@@ -312,7 +339,7 @@ var SGrid = function () {
                         for (var i in option.cols) {
                             var val = $(this).find('td[col=' + option.cols[i] + ']').text();
                             if (option.colsType[i] == 'text' || option.colsType[i] == 'hide')$(this).find('td[col=' + option.cols[i] + ']').text('').wrapInner('<input class="form-control" col="' + option.cols[i] + '" name="' + option.cols[i] + '" value="' + val + '">');
-                            if (typeof option.colsType[i] == 'object')$(this).find('td[col=' + option.cols[i] + ']').text('').wrapInner(SGrid._dataObject(option.colsType[i], val, option.cols[i]));
+                            if (typeof option.colsType[i] == 'object')$(this).find('td[col=' + option.cols[i] + ']').text('').wrapInner(SGrid._dataObject(option.colsType[i], $(this).find('td[col=' + option.cols[i] + ']').attr('data-select-cd'), option.cols[i]));
                             if (option.colsType[i] == 'checkbox')$(this).find('input[col=' + option.cols[i] + ']').removeAttr('disabled');
                             $(this).find('.SGrid-state').text('U').css('color', 'red');
                             $(this).find('.SGrid-check input').prop('checked', true);
@@ -326,6 +353,7 @@ var SGrid = function () {
                     try {
                         var ins = [];
                         var upd = [];
+                        var insData = new FormData();
                         $('#SGrid-table'+cnt+' .SGrid-check :checked').each(function() {
                             var state = $(this).closest('tr').find('.SGrid-state').text()
                             var val = '';
@@ -336,13 +364,16 @@ var SGrid = function () {
                                 if(option.colsType[i] == 'checkbox')val = $(this).closest('tr').find('input[name='+col+']').prop('checked');
                                 else if(Object.getOwnPropertyNames(option.colsType[i])[0] == 'select')val = $(this).closest('tr').find('select[name='+col+']').val();
                                 else val = $(this).closest('tr').find('input[name='+col+']').val();
-                                if(state == "I" && col != option.key)list[col] = val;
+                                if(state == "I")list[col] = val;
                                 if(state == "U")list[col] = val;
+                                if(typeof option.colsFileInsBtn == 'object')if(state == 'I')insData.append(col, val);
                             }
+                            if(typeof option.colsFileInsBtn == 'object') if(state == 'I')insData.append('file', $(this).closest('tr').find('input[type=file]')[0].files[0]);
+
                             if(state == 'U')upd.push(list);
                             if(state == 'I')ins.push(list);
                         })
-                        if(ins.length > 0)option.functional.ins(ins);
+                        if(ins.length > 0)option.functional.ins(ins, insData);
                         if(upd.length > 0)option.functional.upd(upd);
                         if(upd.length == 0 && ins.length == 0)alert('저장, 수정할 데이터가 없습니다.');
                     } catch(e) {
@@ -367,7 +398,7 @@ var SGrid = function () {
                     find_html.push('</select>')
                     find_html.push('</td>')
                     find_html.push('<td colspan="' + option.cols.length + '" class="SGrid-search-td"">')
-                    find_html.push('<div style="position:relative;"><input type="text" id="SGrid-search" class="form-control"><div class="SGrid-search-close"><span>&times;</span></div></div>')
+                    find_html.push('<div style="position:relative;"><input type="text" id="SGrid-search" class="form-control" style="padding-top: 0px;padding-bottom: 0px;"><div class="SGrid-search-close"><span>&times;</span></div></div>')
                     find_html.push('</td>')
                     find_html.push('</tr>')
                     $('#SGrid-table' + cnt).find('thead').append(find_html.join(''))
@@ -389,7 +420,7 @@ var SGrid = function () {
                             }
                             else {
                                 $(this).closest('tr').find('.SGrid-search-td').empty();
-                                $(this).closest('tr').find('.SGrid-search-td').append('<div style="position:relative;"><input type="text" id="SGrid-search" class="form-control"><div class="SGrid-search-close"><span>&times;</span></div></div>');
+                                $(this).closest('tr').find('.SGrid-search-td').append('<div style="position:relative;"><input type="text" id="SGrid-search" class="form-control"  style="padding-top: 0px;padding-bottom: 0px;"><div class="SGrid-search-close"><span>&times;</span></div></div>');
                             }
                         }
                     }
@@ -410,15 +441,11 @@ var SGrid = function () {
 
                 $(document).on('change', '#SGrid-table' + cnt + ' #SGrid-search', function () {
                     var kind = $(this).closest('tr').find('.SGrid-kind-td select').val();
-                    var kind_index = 0;
                     var search = $(this).val();
                     if (kind != "" && kind != null) {
                         var searchData = [];
-                        for (var i in option.cols) {
-                            if (option.cols[i] == kind)kind_index = i;
-                        }
                         $(option.NOWDATA).each(function () {
-                            if (this[kind_index].toString().indexOf(search) > -1)searchData.push(this);
+                            if (this[kind].toString().indexOf(search) > -1)searchData.push(this);
                         })
                         option.NOWDATA = searchData;
                         SGrid.prototype.reFresh(option, cnt);
@@ -451,6 +478,18 @@ var SGrid = function () {
                     $(element).trigger(EVENT_KEY + 'data', [result]);
                 }
             })
+
+            $(document).on('click', '#SGrid-table' + cnt + ' tbody tr', function () {
+                var state = $(this).find('.SGrid-state').text()
+                if (state != 'U' && state != 'I' && state != 'D') {
+                    var result = {};
+                    for (var i in option.cols) {
+                        if (option.colsType[i] != 'checkbox')result[option.cols[i]] = $(this).find('td[col=' + option.cols[i] + ']').text()
+                        else result[option.cols[i]] = $(this).find('input[col=' + option.cols[i] + ']').prop('checked')
+                    }
+                    $(element).trigger(EVENT_KEY + 'onclick', [result]);
+                }
+            })
         }
 
         SGrid._dataObject = function _dataObject(data, val, col, width) {
@@ -462,6 +501,7 @@ var SGrid = function () {
                 html.push('<option></option>')
                 for (var i in data[type[0]]) {
                     var selected = '';
+                    console.log(i + "//"+val)
                     if (i == val)selected = 'selected';
                     html.push('<option value="' + i + '" ' + selected + '>' + data[type[0]][i] + '</option>');
                 }
@@ -472,7 +512,39 @@ var SGrid = function () {
         }
 
         SGrid.event = function (obj, option, cnt) {
-            obj.getColumnValue = function (row, col) {
+            obj.reData = function(data) {
+                option.ORIDATA = data;
+                option.NOWDATA = option.ORIDATA;
+                SGrid.prototype.reFresh(option, cnt)
+            }
+
+            obj.getColumnValue = function(row, col) {
+                var tr = $('#SGrid-table' + cnt).find('.SGrid-body').find('tr').eq(row - 1);
+                var val = '';
+                if (typeof col == 'number') {
+                    if (option.check)col = col + 1;
+                    if (option.count)col = col + 1;
+                    val = tr.find('td').eq(col - 1).find('input').val();
+                }
+                if (typeof col == 'string') {
+                    val = tr.find('input[col=' + col + ']').val();
+                }
+                return val;
+            }
+
+            obj.setColumnValue = function(row, col, val) {
+                var tr = $('#SGrid-table' + cnt).find('.SGrid-body').find('tr').eq(row - 1);
+                if (typeof col == 'number') {
+                    if (option.check)col = col + 1;
+                    if (option.count)col = col + 1;
+                    tr.find('td').eq(col - 1).find('input').val(val);
+                }
+                if (typeof col == 'string') {
+                    tr.find('input[col=' + col + ']').val(val);
+                }
+            }
+
+            obj.getColumnText = function (row, col) {
                 var tr = $('#SGrid-table' + cnt).find('.SGrid-body').find('tr').eq(row - 1);
                 var val = '';
                 if (typeof col == 'number') {
@@ -487,7 +559,7 @@ var SGrid = function () {
                 return val;
             }
 
-            obj.setColumnValue = function (row, col, newData) {
+            obj.setColumnText = function (row, col, newData) {
                 var tr = $('#SGrid-table' + cnt).find('.SGrid-body').find('tr').eq(row - 1);
                 if (typeof col == 'number') {
                     if (option.check)col = col + 1;
@@ -500,6 +572,15 @@ var SGrid = function () {
                     if (typeof newData == 'boolean')tr.find('input[col=' + col + ']').prop('checked', newData);
                     else tr.find('td[col=' + col + ']').text(newData);
 
+                }
+            }
+
+            obj.getRowKey = function(row) {
+                if(option.key != null) {
+                    return "";
+                } else {
+                    var tr = $('#SGrid-table' + cnt).find('.SGrid-body').find('tr').eq(row - 1);
+                    return tr.find('td[col='+option.key+']').val();
                 }
             }
 
@@ -517,12 +598,16 @@ var SGrid = function () {
         }
 
         SGrid._jqueryInterface = function _jqueryInterface(option, _target) {
-            return this.each(function() {
+            var cnt = GRID_COUNT;
+            var obj = this.each(function() {
                 var $this = $(this);
                 var data = $this.data(DATA_KEY);
                 var options = $.extend({}, DEFAULTS, $this.data(), typeof option == 'object' && option)
+                option = options;
                 if (!data) {$this.data(DATA_KEY, (data = new SGrid(this, options)));}
             })
+            SGrid.event(obj, option, cnt);
+            return obj;
         }
         return SGrid;
     }()

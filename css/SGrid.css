@@ -43,6 +43,10 @@
     padding-top: 35px;
 }
 
+.SGrid-table thead th {
+    text-align:center;
+}
+
 .SGrid-table th, .SGrid-table td {
     padding: 0px;
 }
@@ -84,27 +88,33 @@
     background-color: #D0DEFF;
 }
 
-.SGrid-table select {
-    height: 24px;
+
+#SGrid-kind {
+    padding:0
+}
+
+#SGrid-search {
+    padding:0
+}
+
+.SGrid-table select, .SGrid-table input {
+    padding:0px;
 }
 
 .SGrid-search-close {
     position: absolute;
-    top: 2px;
+    top: 1px;
     right: 2px;
     width: 20px;
     height: 20px;
     line-height: 15px;
-    font-weight:bold;
-    color:black;
-    text-align:center;
+    font-weight: bold;
+    color: black;
+    text-align: center;
     font-size: 20px;
     z-index: 30;
-    cursor:pointer;
-    background-color:white;
-    /*-webkit-border-radius:10px;*/
-    /*-moz-border-radius:10px;*/
-    /*border-radius:10px;*/
+    cursor: pointer;
+    background-color: transparent;
 }
 
 .SGrid-search-close > span {
@@ -204,4 +214,99 @@ html {
 ::-webkit-scrollbar-thumb {
     background-color: #A1ABB6;
     border-radius: 6px;
+}
+
+.file-td {
+    position:relative;
+    text-align:left;
+}
+
+.file-input {
+    position:absolute;
+    bottom:0px;
+    width: 100px;
+    z-index:1000;
+    opacity:0;
+    cursor:pointer;
+}
+
+.file-btn {
+    display: inline-block;
+    padding: 0px 6px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+
+.file-btn-success {
+    color: #fff;
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+}
+.file-btn-success:focus,
+.file-btn-success.focus {
+    color: #fff;
+    background-color: #449d44;
+    border-color: #255625;
+}
+.file-btn-success:hover {
+    color: #fff;
+    background-color: #449d44;
+    border-color: #398439;
+}
+.file-btn-success:active,
+.file-btn-success.active,
+.open > .dropdown-toggle.file-btn-success {
+    color: #fff;
+    background-color: #449d44;
+    border-color: #398439;
+}
+.file-btn-success:active:hover,
+.file-btn-success.active:hover,
+.open > .dropdown-toggle.file-btn-success:hover,
+.file-btn-success:active:focus,
+.file-btn-success.active:focus,
+.open > .dropdown-toggle.file-btn-success:focus,
+.file-btn-success:active.focus,
+.file-btn-success.active.focus,
+.open > .dropdown-toggle.file-btn-success.focus {
+    color: #fff;
+    background-color: #398439;
+    border-color: #255625;
+}
+.file-btn-success:active,
+.file-btn-success.active,
+.open > .dropdown-toggle.file-btn-success {
+    background-image: none;
+}
+.file-btn-success.disabled:hover,
+.file-btn-success[disabled]:hover,
+fieldset[disabled] .file-btn-success:hover,
+.file-btn-success.disabled:focus,
+.file-btn-success[disabled]:focus,
+fieldset[disabled] .file-btn-success:focus,
+.file-btn-success.disabled.focus,
+.file-btn-success[disabled].focus,
+fieldset[disabled] .file-btn-success.focus {
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+}
+.file-btn-success .badge {
+    color: #5cb85c;
+    background-color: #fff;
 }

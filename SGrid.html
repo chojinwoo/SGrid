@@ -20,7 +20,7 @@
                 key: 'seq',
                 title: '샘플그리드',
                 header: ['seq', '시압지번호', '사업소명', '사용코드', '사용여부'],
-                cols: ['seq', 'name', 'age', 'job', 'flag'],
+                cols: ['seq', 'com_cd', 'com_nm', 'job_cd', 'flag'],
                 colsWidth: [100, 200, 500, 500, 100],
                 colsAlign: ['left', 'center', 'center', 'center', 'center'],
                 colsType: ['hide', 'text', 'text', {
@@ -55,21 +55,26 @@
 
 
             var data1 = [
-                ["성우", "01", "무직"],
-                ["처리", "03", "용접"],
-                ["성근", "02", "사무직"],
-                ["상우", "04", "세무사사"]
+                {"name":"성우", "age":"01", "job":"무직", "file":"1.txt"},
+                {"name":"처리", "age":"03", "job":"용접", "file":"1.txt"},
+                {"name":"성근", "age":"02", "job":"사무직", "file":"1.txt"},
+                {"name":"상우", "age":"03", "job":"세무사", "file":"1.txt"}
             ];
 
             var grid3 = $('#grid2').SGrid({
                 width: 1400,
                 height: 500,
                 title:'Grid',
-                header: ['이름', '나이', '직업'],
-                cols: ['name', 'age', 'job'],
-                colsWidth: [400, 400, 400],
-                colsAlign: ['center', 'center', 'left'],
-                colsType: ['text', {'select': {'01': '01', '02': '02', '03': '03'}}, 'text'],
+                header: ['이름', '나이', '직업', "file"],
+                cols: ['name', 'age', 'job', 'file'],
+                colsWidth: [400, 400, 400, 200],
+                colsAlign: ['center', 'center', 'left', 'left'],
+                colsType: ['text', {'select': {'01': '첫번째', '02': '두번째', '03': '세번째'}}, 'text', 'text'],
+                colsFileInsBtn:{ /*dataType FormData*/
+                    text:'파일업로드',
+                    type:'file',
+                    mappingCol:'file'
+                },
                 dataRepo:'local',
                 data: data1,
                 btn: {upd: true, ins: true, del: true, find: true, refresh: true},
